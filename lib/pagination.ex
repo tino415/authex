@@ -12,9 +12,10 @@ defmodule Pagination do
   end
 
   def paginate(query, repo, pagination) do
-    count = repo.count(query)
+    count_query = %{query | order_bys: []}
+    count = repo.one(from(q in count_query, select: count(q.id)))
 
-    page_count = count / pagination.page_size
+    page_count = ceil(count / pagination.page_size)
 
     entries = 
       from(q in query,

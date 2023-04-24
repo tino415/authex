@@ -4,6 +4,11 @@ defmodule Crypto do
     |> base64_url_encode()
   end
 
+  def generate_secret do
+    :crypto.strong_rand_bytes(32)
+    |> :base64.encode()
+  end
+
   defp base64_url_encode(string) do
     string
     |> Base.encode64()

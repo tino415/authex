@@ -25,6 +25,7 @@ defmodule Authex.MixProject do
       {:bandit, "~> 0.6"},
       {:ecto_sql, "~> 3.0"},
       {:jason, "~> 1.4"},
+      {:joken, "~> 2.5"},
       {:plug, "~> 1.14"},
       {:postgrex, ">= 0.0.0"}
     ]

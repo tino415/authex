@@ -1,4 +1,5 @@
 defmodule Pagination.Page do
+  @derive Jason.Encoder
   defstruct [
     :entries,
     :count,
