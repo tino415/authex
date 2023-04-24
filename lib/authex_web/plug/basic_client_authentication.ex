@@ -1,4 +1,4 @@
-defmodule AuthexWeb.Plugs.BasicClientAuthorization do
+defmodule AuthexWeb.Plugs.BasicClientAuthentication do
   use Web.Plug
 
   alias Plug.BasicAuth
@@ -23,12 +23,11 @@ defmodule AuthexWeb.Plugs.BasicClientAuthorization do
         |> BasicAuth.request_basic_auth()
         |> halt()
     end
-    |> IO.inspect(label: "#{inspect(__MODULE__)}")
   end
 
   defp invalid_authorization(conn) do
     conn
-    |> send_resp(403, "{\"error\": \"invalid\"}")
+    |> json_resp(403, %{"error" => "invalid"})
     |> halt()
   end
 end

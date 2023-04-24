@@ -31,8 +31,8 @@ defmodule Authex.Schemas.Token do
 
         {:ok, jwt, _claims} =
           %{}
-          |> add_claim("iss", fn -> "http://localhost:4000" end, &(&1 == "http://localhost:4000"))
-          |> add_claim("aud", fn -> client.name end, &(&1 == client.name))
+          |> add_claim("iss", fn -> "http://localhost:4000" end, fn _ -> true end)
+          |> add_claim("aud", fn -> client.id end, fn _ -> true end)
           |> add_claim("exp",
                fn -> get_field(changeset, :expires_at) end,
                fn exp -> :os.system_time() < exp end

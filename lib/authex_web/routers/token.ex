@@ -4,12 +4,11 @@ defmodule AuthexWeb.Routers.Token do
   alias AuthexWeb.Plugs
   alias AuthexWeb.Controllers
 
-  plug(Plugs.BasicClientAuthorization)
+  plug(Plugs.BasicClientAuthentication)
   plug(:match)
   plug(:dispatch)
 
   post "/" do
-    IO.inspect(conn.assigns, label: "currents")
     Controllers.Token.create(conn, conn.assigns.current_client, conn.body_params)
   end
 
