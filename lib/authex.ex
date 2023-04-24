@@ -62,5 +62,38 @@ defmodule Authex do
     %Schemas.Token{}
     |> Schemas.Token.changeset(client)
     |> Repo.insert()
+    |> case do
+         {:ok, token} -> {:ok, Schemas.Token.generate_access_token(token)}
+         error -> error
+     end
+  end
+
+  def list_scopes(pagination) do
+    from(s in Schemas.Scope, order_by: [desc: s.inserted_at])
+    |> Pagination.paginate(Repo, pagination)
+  end
+
+  def get_scope(scope_id) do
+    Repo.get(Schemas.Scope, scope_id)
+  end
+
+  def create_scope(parameters) do
+    %Schemas.Scope{}
+    |> Schemas.Scope.changeset(parameters)
+    |> Repo.insert()
+  end
+
+  def delete_scope(scope) do
+    if scope.build_in do
+      {:error, :build_in}
+    else
+      Repo.delete(scope)
+    end
+  end
+
+  def update_scope(scope, parameteres) do
+    scope
+    |> Schemas.Scope.changeset(parameteres)
+    |> Repo.update()
   end
 end

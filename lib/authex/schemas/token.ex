@@ -3,16 +3,14 @@ defmodule Authex.Schemas.Token do
 
   alias Authex.Schemas
 
-  import Joken.Config
-
   @derive {Jason.Encoder, only: [:access_token, :expires_in]}
   schema "tokens" do
-    field :access_token, :string
+    field :access_token, :string, virtual: true
     field :expires_in, :integer
     field :expires_at, :utc_datetime
     belongs_to(:client, Schemas.Client)
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   def changeset(struct_or_changeset, client) do
@@ -20,28 +18,23 @@ defmodule Authex.Schemas.Token do
     |> change(expires_in: 3600)
     |> put_now_moved_if_empty(:expires_at, 3600, :second)
     |> put_assoc(:client, client)
-    |> generate_jwt_token_if_not_set()
-    |> validate_required([:expires_in, :expires_at, :access_token])
+    |> validate_required([:expires_in, :expires_at])
   end
 
-  defp generate_jwt_token_if_not_set(changeset) do
-    case get_field(changeset, :access_token) do
-      nil ->
-        client = get_field(changeset, :client)
+  def generate_access_token(token) do
+    {:ok, access_token, _claims} =
+      Joken.generate_and_sign(
+        %{},
+        %{
+           "iss" => "http://localhost:4000",
+           "aud" => token.client_id,
+           "exp" => DateTime.to_unix(token.expires_at),
+           "nbf" => DateTime.to_unix(token.inserted_at),
+           "iat" => DateTime.to_unix(token.inserted_at),
+           "jti" => token.id
+        }
+      )
 
-        {:ok, jwt, _claims} =
-          %{}
-          |> add_claim("iss", fn -> "http://localhost:4000" end, fn _ -> true end)
-          |> add_claim("aud", fn -> client.id end, fn _ -> true end)
-          |> add_claim("exp",
-               fn -> get_field(changeset, :expires_at) end,
-               fn exp -> :os.system_time() < exp end
-          )
-          |> Joken.generate_and_sign()
-
-        put_change(changeset, :access_token, jwt)
-      _ ->
-        changeset
-    end 
+    Map.put(token, :access_token, access_token)
   end
 end

@@ -48,6 +48,26 @@ defmodule AuthexWeb.Routers.Protected do
     Controllers.Client.delete(conn, conn.path_params["client_id"])
   end
 
+  get "/scopes" do
+    Controllers.Scope.list(conn, conn.query_params)
+  end
+
+  get "/scopes/:scope_id" do
+    Controllers.Scope.get(conn, conn.params["scope_id"])
+  end
+
+  post "/scopes" do
+    Controllers.Scope.create(conn, conn.body_params)
+  end
+
+  put "/scopes/:scope_id" do
+    Controllers.Scope.update(conn, conn.params["scope_id"], conn.body_params)
+  end
+
+  delete "/scopes/:scope_id" do
+    Controllers.Scope.delete(conn, conn.params["scope_id"])
+  end
+
   match _ do
     Controllers.Fallback.not_found(conn)
   end

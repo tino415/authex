@@ -8,7 +8,7 @@ defmodule Authex.Schemas.User do
     field(:password_verify, :string, virtual: true)
     field(:password_hash, :string)
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   def changeset(user, params) do

@@ -6,7 +6,8 @@ defmodule Authex.Schemas.Client do
     field :secret, :string, virtual: true
     field :secret_hash, :string
     field :name, :string
-    timestamps()
+
+    timestamps(type: :utc_datetime)
   end
 
   def changeset(schema_or_changeset, params) do
