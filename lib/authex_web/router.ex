@@ -1,15 +1,15 @@
 defmodule AuthexWeb.Router do
   use Web.Router
 
-  alias AuthexWeb.Controllers
+  alias AuthexWeb.Actions
   alias AuthexWeb.Routers
 
   plug(:match)
   plug(:dispatch)
 
-  get "/ping", do: Controllers.Ping.ping(conn)
+  get "/ping", do: Actions.Ping.call(conn, nil)
 
-  forward "/tokens", to: Routers.Token
+  post "/tokens", to: Actions.Token.Create
 
   forward "", to: Routers.Protected
 end

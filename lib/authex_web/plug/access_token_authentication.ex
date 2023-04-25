@@ -7,10 +7,13 @@ defmodule AuthexWeb.Plugs.AccessTokenAuthentication do
     case get_req_header(conn, "authorization") do
       ["Bearer " <> access_token] ->
         case Joken.verify_and_validate(%{}, access_token) |> IO.inspect(label: "joken response") do
-          {:ok, %{"aud" => client_id}} ->
+          {:ok, %{"aud" => client_id} = claims} ->
             case Authex.get_client(client_id) do
               nil -> send_unauthorized(conn)
-              client -> assign(conn, :current_client, client)
+              client ->
+                conn
+                |> assign(:current_client, client)
+                |> assign(:current_claims, claims)
             end
           {:error, _} -> send_unauthorized(conn)
         end
