@@ -1,11 +1,11 @@
 defmodule AuthexWeb.Actions.User.Create do
-  use Web.Action
+  use Web.Action.Create
 
   @impl true
-  def run(conn, _opts) do
-    case Authex.create_user(conn.body_params) do
-      {:ok, user} -> json_resp(conn, 200, user)
-      {:error, _changeset} -> json_resp(conn, 403, %{"error" => "invalid data"})
+  def create(conn, body_params) do
+    case Authex.create_user(body_params) do
+      {:ok, user} -> View.created(conn, user)
+      {:error, _changeset} -> View.invalid_request(conn)
     end
   end
 end

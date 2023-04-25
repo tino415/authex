@@ -1,11 +1,11 @@
 defmodule AuthexWeb.Actions.User.List do
-  use Web.Action
+  use Web.Action.List
 
   @impl true
-  def run(conn, _opts) do
-    case Pagination.cast_pagination(conn.quote_params) do
-      {:ok, pagination} -> json_resp(conn, 200, Authex.list_users(pagination))
-      _ -> json_resp(conn, 403, %{"error" => "invalid data"})
+  def list(conn, query_params) do
+    case Pagination.cast_pagination(query_params) do
+      {:ok, pagination} -> View.success(conn, Authex.list_users(pagination))
+      _ -> View.invalid_request(conn)
     end
   end
 end

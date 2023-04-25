@@ -1,14 +1,14 @@
 defmodule AuthexWeb.Actions.User.Update do
-  use Web.Action
+  use Web.Action.Update, name: "user_id"
 
   @impl true
-  def run(conn, _opts) do
-    case Authex.get_user(conn.path_params["user_id"]) do
-      nil -> json_resp(conn, 404, %{"error" => "not found"})
+  def update(conn, user_id, body_params) do
+    case Authex.get_user(user_id) do
+      nil -> View.not_found(conn)
       user ->
-        case Authex.update_user(user, conn.body_params) do
-          {:ok, user} -> json_resp(conn, 200, user)
-          _ -> json_resp(conn, 403, %{"error" => "invalid data"})
+        case Authex.update_user(user, body_params) do
+          {:ok, user} -> View.success(conn, user)
+          _ -> View.invalid_request(conn)
         end
     end
   end

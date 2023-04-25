@@ -1,13 +1,13 @@
 defmodule AuthexWeb.Actions.Client.Get do
-  use Web.Action do
+  use Web.Action.Get, [name: "client_id", do: (
     plug AuthexWeb.Plugs.VerifyScopes, ["oauth:client:read"]
-  end
+  )]
 
   @impl true
-  def run(conn, _opts) do
-    case Authex.get_client(conn.path_params["client_id"]) do
-      nil -> json_resp(conn, 404, %{"error" => "not found"})
-      client -> json_resp(conn, 200, client)
+  def get(conn, client_id) do
+    case Authex.get_client(client_id) do
+      nil -> View.not_found(conn)
+      client -> View.success(conn, client)
     end
   end
 end

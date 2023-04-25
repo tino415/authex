@@ -1,14 +1,13 @@
 defmodule AuthexWeb.Actions.Client.List do
-  use Web.Action do
+  use Web.Action.List do
     plug AuthexWeb.Plugs.VerifyScopes, ["oauth:client:read"]
   end
 
   @impl true
-  def run(conn, _opts) do
-    IO.puts("call")
-    case Pagination.cast_pagination(conn.query_params) do
-      {:ok, pagination} -> json_resp(conn, 200, Authex.list_clients(pagination))
-      _ -> json_resp(conn, 403, %{"error" => "invalid data"})
+  def list(conn, pagination) do
+    case Pagination.cast_pagination(pagination) do
+      {:ok, pagination} -> View.success(conn, Authex.list_clients(pagination))
+      _ -> View.not_found(conn)
     end
   end
 end

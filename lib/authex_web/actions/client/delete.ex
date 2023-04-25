@@ -1,16 +1,16 @@
 defmodule AuthexWeb.Actions.Client.Delete do
-  use Web.Action do
+  use Web.Action.Delete, [name: "client_id", do: (
     plug AuthexWeb.Plugs.VerifyScopes, ["oauth:client:delete"]
-  end
+  )]
 
   @impl true
-  def run(conn, _opts) do
-    case Authex.get_client(conn.path_params["client_id"]) do
-      nil -> json_resp(conn, 404, %{"error" => "not found"})
+  def delete(conn, client_id) do
+    case Authex.get_client(client_id) do
+      nil -> View.not_found(conn)
       client ->
         case Authex.delete_client(client) do
-          {:ok, client} -> json_resp(conn, 200, client)
-          _ -> json_resp(conn, 403, %{"error" => "invalid data"})
+          {:ok, client} -> View.success(conn, client)
+          _ -> View.invalid_request(conn)
         end
     end
   end

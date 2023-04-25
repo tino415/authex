@@ -1,10 +1,11 @@
 defmodule AuthexWeb.Actions.Scope.Create do
-  use Web.Action
+  use Web.Action.Create
 
-  def run(conn, _opts) do
-    case Authex.create_scope(conn.body_params) do
-      {:ok, scope} -> json_resp(conn, 201, scope)
-      {:error, _} -> json_resp(conn, 422, %{"message" => "invalid_request"})
+  @impl true
+  def create(conn, body_params) do
+    case Authex.create_scope(body_params) do
+      {:ok, scope} -> View.created(conn, scope)
+      {:error, _} -> View.invalid_request(conn)
     end
   end
 end

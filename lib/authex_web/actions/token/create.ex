@@ -4,10 +4,10 @@ defmodule AuthexWeb.Actions.Token.Create do
   end
 
   @impl true
-  def run(conn, _opts) do
+  def run(conn) do
     case Authex.create_token(conn.assigns.current_client) do
-      {:ok, token} -> json_resp(conn, 201, token)
-      {:error, _changeset} -> json_resp(conn, 403, %{"error" => "invalid data"})
+      {:ok, token} -> View.created(conn, token)
+      {:error, _changeset} -> View.invalid_request(conn)
     end
   end
 end

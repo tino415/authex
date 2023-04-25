@@ -1,14 +1,14 @@
 defmodule AuthexWeb.Actions.Scope.Update do
-  use Web.Action
+  use Web.Action.Update, name: "scope_id"
 
   @impl true
-  def run(conn, _opts) do
-    case Authex.get_scope(conn.query_params["scope_id"]) do
-      nil -> json_resp(conn, 404, %{"message" => "not_found"})
+  def update(conn, scope_id, body_params) do
+    case Authex.get_scope(scope_id) do
+      nil -> View.not_found(conn)
       scope ->
-        case Authex.update_scope(scope, conn.body_params) do
-          {:ok, scope} -> json_resp(conn, 200, scope)
-          {:error, _} -> json_resp(conn, 400, %{"message" => "invalid_request"})
+        case Authex.update_scope(scope, body_params) do
+          {:ok, scope} -> View.success(conn, scope)
+          {:error, _} -> View.invalid_request(conn)
         end
     end
   end

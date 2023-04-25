@@ -11,7 +11,7 @@ defmodule AuthexWeb.Plugs.VerifyScopes do
       conn
     else
       conn
-      |> json_resp(403, %{"message" => "unauthorized"})
+      |> View.unauthorized()
       |> halt()
     end
   end

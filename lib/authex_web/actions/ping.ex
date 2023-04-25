@@ -2,7 +2,7 @@ defmodule AuthexWeb.Actions.Ping do
   use Web.Action
 
   @impl true
-  def run(conn, _opts) do
-    json_resp(conn, 200, %{"message" => "pong"})
+  def run(conn) do
+    View.success(conn, %{"message" => "pong"})
   end
 end

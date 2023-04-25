@@ -1,14 +1,14 @@
 defmodule AuthexWeb.Actions.User.Delete do
-  use Web.Action
+  use Web.Action.Delete, name: "user_id"
 
   @impl true
-  def run(conn, _opts) do
-    case Authex.get_user(conn.path_params["user_id"]) do
-      nil -> json_resp(conn, 404, %{"error" => "not found"})
+  def delete(conn, user_id) do
+    case Authex.get_user(user_id) do
+      nil -> View.not_found(conn)
       user ->
         case Authex.delete_user(user) do
-          {:ok, user} -> json_resp(conn, 200, user)
-          _ -> json_resp(conn, 500, %{"message" => "internal server error"})
+          {:ok, user} -> View.success(conn, user)
+          _ -> View.internal_server_error(conn)
         end
     end
   end

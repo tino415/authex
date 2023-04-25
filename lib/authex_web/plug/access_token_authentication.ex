@@ -6,7 +6,7 @@ defmodule AuthexWeb.Plugs.AccessTokenAuthentication do
   def call(conn, _opts) do
     case get_req_header(conn, "authorization") do
       ["Bearer " <> access_token] ->
-        case Joken.verify_and_validate(%{}, access_token) |> IO.inspect(label: "joken response") do
+        case Joken.verify_and_validate(%{}, access_token) do
           {:ok, %{"aud" => client_id} = claims} ->
             case Authex.get_client(client_id) do
               nil -> send_unauthorized(conn)
@@ -23,7 +23,7 @@ defmodule AuthexWeb.Plugs.AccessTokenAuthentication do
 
   defp send_unauthorized(conn) do
     conn
-    |> json_resp(403, %{"message" => "Missing or insufficient authorization"})
+    |> View.unauthorized()
     |> halt()
   end
 end

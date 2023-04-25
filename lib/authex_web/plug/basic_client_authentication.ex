@@ -19,15 +19,19 @@ defmodule AuthexWeb.Plugs.BasicClientAuthentication do
             end
         end
       _ ->
-        conn
-        |> BasicAuth.request_basic_auth()
-        |> halt()
+        request_basic_auth(conn)
     end
   end
 
   defp invalid_authorization(conn) do
     conn
-    |> json_resp(403, %{"error" => "invalid"})
+    |> View.unauthorized()
+    |> halt()
+  end
+
+  defp request_basic_auth(conn) do
+    conn
+    |> BasicAuth.request_basic_auth()
     |> halt()
   end
 end
