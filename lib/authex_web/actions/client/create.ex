@@ -7,7 +7,7 @@ defmodule AuthexWeb.Actions.Client.Create do
   def create(conn, body_params) do
     case Authex.create_client(body_params) do
       {:ok, client} -> View.created(conn, client)
-      {:error, _changeset} -> View.invalid_request(conn)
+      {:error, changeset} -> View.invalid_request(conn, changeset)
     end
   end
 end

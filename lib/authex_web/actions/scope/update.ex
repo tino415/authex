@@ -8,7 +8,7 @@ defmodule AuthexWeb.Actions.Scope.Update do
       scope ->
         case Authex.update_scope(scope, body_params) do
           {:ok, scope} -> View.success(conn, scope)
-          {:error, _} -> View.invalid_request(conn)
+          {:error, changeset} -> View.invalid_request(conn, changeset)
         end
     end
   end

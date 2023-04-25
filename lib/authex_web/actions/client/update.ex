@@ -5,13 +5,15 @@ defmodule AuthexWeb.Actions.Client.Update do
 
   @impl true
   def update(conn, client_id, body_params) do
-    case Authex.get_client(client_id) do
-      nil -> View.not_found(conn)
-      client ->
-        case Authex.update_client(client, body_params) do
-          {:ok, client} -> View.success(conn, client)
-          _ -> View.invalid_request(conn)
-        end
+    with %{} = client = Authex.get_client(client_id),
+         {:ok, client} <- Authex.update_client(client, body_params) do
+      View.success(conn, client)
+    else
+      nil ->
+        View.not_found(conn)
+
+      {:error, changeset} ->
+        View.invalid_request(conn, changeset)
     end
   end
 end

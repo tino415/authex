@@ -7,7 +7,7 @@ defmodule AuthexWeb.Actions.Token.Create do
   def run(conn) do
     case Authex.create_token(conn.assigns.current_client) do
       {:ok, token} -> View.created(conn, token)
-      {:error, _changeset} -> View.invalid_request(conn)
+      {:error, changeset} -> View.invalid_request(conn, changeset)
     end
   end
 end

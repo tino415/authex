@@ -1,6 +1,8 @@
 defmodule AuthexWeb.View do
   import Web.Json
 
+  alias Ecto.Changeset
+
   def created(conn, body) do
     json_resp(conn, 201, body)
   end
@@ -17,8 +19,17 @@ defmodule AuthexWeb.View do
     json_resp(conn, 404, %{"error" => "not found"})
   end
 
-  def invalid_request(conn) do
-    json_resp(conn, 400, %{"error" => "invalid request"})
+  def invalid_request(conn, changeset) do
+    response = 
+      Changeset.traverse_errors(changeset, fn {msg, opts} ->
+        Regex.replace(~r"%{(\w+)}", msg, fn _, key ->
+          opts
+          |> Keyword.get(String.to_existing_atom(key), key)
+          |> to_string()
+        end)
+      end)
+
+    json_resp(conn, 400, response)
   end
 
   def internal_server_error(conn) do

@@ -8,7 +8,7 @@ defmodule AuthexWeb.Actions.Scope.Delete do
       scope ->
         case Authex.delete_scope(scope) do
           {:ok, scope} -> View.success(conn, scope)
-          _ -> View.invalid_request(conn)
+          _ -> View.internal_server_error(conn)
         end
     end
   end

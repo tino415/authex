@@ -8,7 +8,7 @@ defmodule AuthexWeb.Actions.User.Update do
       user ->
         case Authex.update_user(user, body_params) do
           {:ok, user} -> View.success(conn, user)
-          _ -> View.invalid_request(conn)
+          {:error, changeset} -> View.invalid_request(conn, changeset)
         end
     end
   end

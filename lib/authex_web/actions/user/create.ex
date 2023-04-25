@@ -5,7 +5,7 @@ defmodule AuthexWeb.Actions.User.Create do
   def create(conn, body_params) do
     case Authex.create_user(body_params) do
       {:ok, user} -> View.created(conn, user)
-      {:error, _changeset} -> View.invalid_request(conn)
+      {:error, changeset} -> View.invalid_request(conn, changeset)
     end
   end
 end

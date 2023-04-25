@@ -44,8 +44,8 @@ defmodule Authex do
     |> Repo.insert()
   end
 
-  def delete_client(client) do
-    Repo.delete(client)
+  def delete_client!(client) do
+    Repo.delete!(client)
   end
 
   def update_client(client, params) do

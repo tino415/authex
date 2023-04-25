@@ -5,7 +5,7 @@ defmodule AuthexWeb.Actions.Scope.List do
   def list(conn, query_params) do
     case Pagination.cast_pagination(query_params) do
       {:ok, pagination} -> View.success(conn, Authex.list_scopes(pagination))
-      _ -> View.invalid_request(conn)
+      {:error, changeset} -> View.invalid_request(conn, changeset)
     end
   end
 end

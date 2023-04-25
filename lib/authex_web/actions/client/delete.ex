@@ -7,11 +7,7 @@ defmodule AuthexWeb.Actions.Client.Delete do
   def delete(conn, client_id) do
     case Authex.get_client(client_id) do
       nil -> View.not_found(conn)
-      client ->
-        case Authex.delete_client(client) do
-          {:ok, client} -> View.success(conn, client)
-          _ -> View.invalid_request(conn)
-        end
+      client -> View.success(conn, Authex.delete_client!(client))
     end
   end
 end
