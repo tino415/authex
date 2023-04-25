@@ -1,12 +1,7 @@
 defmodule AuthexWeb.Routers.Protected do
-  use Web.Router
-
-  alias AuthexWeb.Plugs
-  alias AuthexWeb.Actions
-
-  plug(Plugs.AccessTokenAuthentication)
-  plug(:match)
-  plug(:dispatch)
+  use Web.Router do
+    plug(Plugs.AccessTokenAuthentication)
+  end
 
   get "/users", to: Actions.User.List
 
