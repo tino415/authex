@@ -1,11 +1,11 @@
 defmodule AuthexWeb.Actions.Token.Create do
-  use Web.Action do
+  use Web.Action.Create do
     plug(AuthexWeb.Plugs.BasicClientAuthentication)
   end
 
   @impl true
-  def run(conn) do
-    case Authex.create_token(conn.assigns.current_client) do
+  def create(conn, body_params) do
+    case Authex.create_token(conn.assigns.current_client, body_params) do
       {:ok, token} -> View.created(conn, token)
       {:error, changeset} -> View.invalid_request(conn, changeset)
     end

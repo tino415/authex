@@ -58,9 +58,9 @@ defmodule Authex do
     Schemas.Client.secret_valid?(client, secret)
   end
 
-  def create_token(client) do
+  def create_token(client, body_params) do
     %Schemas.Token{}
-    |> Schemas.Token.changeset(client)
+    |> Schemas.Token.changeset(client, body_params)
     |> Repo.insert()
     |> case do
          {:ok, token} -> {:ok, Schemas.Token.generate_access_token(token)}

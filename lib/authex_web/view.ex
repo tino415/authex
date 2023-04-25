@@ -29,7 +29,7 @@ defmodule AuthexWeb.View do
         end)
       end)
 
-    json_resp(conn, 400, response)
+    json_resp(conn, 422, response)
   end
 
   def internal_server_error(conn) do

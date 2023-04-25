@@ -1,5 +1,7 @@
 defmodule AuthexWeb.Actions.User.Delete do
-  use Web.Action.Delete, name: "user_id"
+  use Web.Action.Delete, [name: "user_id", do: (
+    plug AuthexWeb.Plugs.VerifyScopes, ["oauth:user:delete"]
+  )]
 
   @impl true
   def delete(conn, user_id) do

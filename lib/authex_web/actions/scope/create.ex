@@ -1,5 +1,7 @@
 defmodule AuthexWeb.Actions.Scope.Create do
-  use Web.Action.Create
+  use Web.Action.Create do
+    plug AuthexWeb.Plugs.VerifyScopes, ["oauth:scope:create"]
+  end
 
   @impl true
   def create(conn, body_params) do
