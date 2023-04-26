@@ -1,38 +1,27 @@
 defmodule AuthexWeb.View do
-  import Web.Json
-
-  alias Ecto.Changeset
+  import PlugJason
 
   def created(conn, body) do
-    json_resp(conn, 201, body)
+    json_created(conn, body)
   end
 
   def success(conn, body) do
-    json_resp(conn, 200, body)
+    json_success(conn, body)
   end
 
   def unauthorized(conn) do
-    json_resp(conn, 403, %{"message" => "Missing or insufficient authorization"})
+    json_unauthorized(conn, %{"message" => "Missing or insufficient authorization"})
   end
 
   def not_found(conn) do
-    json_resp(conn, 404, %{"error" => "not found"})
+    json_not_found(conn, %{"error" => "not found"})
   end
 
   def invalid_request(conn, changeset) do
-    response = 
-      Changeset.traverse_errors(changeset, fn {msg, opts} ->
-        Regex.replace(~r"%{(\w+)}", msg, fn _, key ->
-          opts
-          |> Keyword.get(String.to_existing_atom(key), key)
-          |> to_string()
-        end)
-      end)
-
-    json_resp(conn, 422, response)
+    json_unprocessable_entity_changeset(conn, changeset)
   end
 
   def internal_server_error(conn) do
-    json_resp(conn, 500, %{"message" => "internal server error"})
+    json_ise(conn, %{"message" => "internal server error"})
   end
 end

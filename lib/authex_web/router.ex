@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Router do
-  use Web.Router
+  use AuthexWeb.Meta.Router
 
   get "/ping", do: Actions.Ping.call(conn, nil)
 

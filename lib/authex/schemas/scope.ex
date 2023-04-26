@@ -1,12 +1,16 @@
 defmodule Authex.Schemas.Scope do
   use Domain.Schema
 
+  alias Authex.Schemas
+
   import Ecto.Query
 
   @derive {Jason.Encoder, only: [:id, :name]}
   schema "scopes" do
     field :name, :string
     field :build_in, :boolean, default: false
+
+    has_many :scope_clients, Schemas.ClientScope
 
     timestamps(type: :utc_datetime)
   end
@@ -18,10 +22,12 @@ defmodule Authex.Schemas.Scope do
     |> validate_required([:name])
   end
 
-  def query(scopes) do
+  def for_client_query(client_id, scopes) do
     from(
       s in __MODULE__,
-      where: s.name in ^scopes
+      inner_join: sc in assoc(s, :scope_clients),
+      where: s.name in ^scopes,
+      where: sc.client_id == ^client_id
     )
   end
 end

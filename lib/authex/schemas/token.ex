@@ -29,19 +29,34 @@ defmodule Authex.Schemas.Token do
       if changed?(changeset, :scope_list) do
         provided_scopes = get_change(changeset, :scope_list)
 
-        existing_scopes = changeset.repo.all(Schemas.Scope.query(provided_scopes))
+        existing_scopes =
+          changeset.repo.all(
+            Schemas.Scope.for_client_query(
+              client.id,
+              provided_scopes
+            )
+          )
 
         existing_scopes_names = Enum.map(existing_scopes, & &1.name)
 
-        if Enum.all?(provided_scopes, & &1 in existing_scopes_names) do
+        changeset =
+          Enum.reduce(provided_scopes, changeset, fn name, changeset ->
+            if name in existing_scopes_names do
+              changeset
+            else
+              add_error(changeset, :scope, "invalid scope %{scope}", scope: name)
+            end
+          end)
+
+        if not changeset.valid? do
+          changeset
+        else
           token_scopes =
             Enum.map(existing_scopes, fn scope ->
               Schemas.TokenScope.changeset(%Schemas.TokenScope{}, scope)
             end)
 
           put_assoc(changeset, :token_scopes, token_scopes)
-        else
-          add_error(changeset, :scope, "invalid")
         end
       else
         changeset

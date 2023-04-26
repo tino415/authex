@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Actions.User.Create do
-  use Web.Action.Create do
+  use AuthexWeb.Meta.Action.Create do
     plug AuthexWeb.Plugs.VerifyScopes, ["oauth:user:create"]
   end
 

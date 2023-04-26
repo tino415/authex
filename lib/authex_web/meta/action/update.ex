@@ -1,11 +1,11 @@
-defmodule Web.Action.Update do
+defmodule AuthexWeb.Meta.Action.Update do
   @callback update(Plug.Conn.t(), String.t(), map()) :: Plug.Conn.t()
 
   defmacro __using__(opts) do
     name = Keyword.get(opts, :name, "id")
 
     quote do
-      use Web.Action, unquote(opts)
+      use AuthexWeb.Meta.Action, unquote(opts)
 
       @behaviour unquote(__MODULE__)
 

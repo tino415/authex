@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Actions.User.List do
-  use Web.Action.List do
+  use AuthexWeb.Meta.Action.List do
     plug AuthexWeb.Plugs.VerifyScopes, ["oauth:user:read"]
   end
 

@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Endpoint do
-  use Web.Endpoint
+  use AuthexWeb.Meta.Endpoint
 
   plug(Plug.Logger)
 

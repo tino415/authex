@@ -30,12 +30,13 @@ defmodule Authex do
   end
 
   def list_clients(pagination) do
-    from(c in Schemas.Client, order_by: [desc: c.inserted_at])
+    Schemas.Client.query()
+    |> order_by(desc: :inserted_at)
     |> Pagination.paginate(Repo, pagination)
   end
 
   def get_client(client_id) do
-    Repo.get(Schemas.Client, client_id)
+    Repo.get(Schemas.Client.query(), client_id)
   end
 
   def create_client(params) do

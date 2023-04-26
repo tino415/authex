@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Actions.Scope.Get do
-  use Web.Action.Get, [name: "scope_id", do: (
+  use AuthexWeb.Meta.Action.Get, [name: "scope_id", do: (
     plug AuthexWeb.Plugs.VerifyScopes, ["oauth:scope:read"]
   )]
 

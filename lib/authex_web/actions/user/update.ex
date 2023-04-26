@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Actions.User.Update do
-  use Web.Action.Update, [name: "user_id", do: (
+  use AuthexWeb.Meta.Action.Update, [name: "user_id", do: (
     plug AuthexWeb.Plugs.VerifyScopes, ["oauth:user:update"]
   )]
 

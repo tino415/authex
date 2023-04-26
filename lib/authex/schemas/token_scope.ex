@@ -7,7 +7,7 @@ defmodule Authex.Schemas.TokenScope do
     belongs_to :token, Schemas.Token
     belongs_to :scope, Schemas.Scope
 
-    timestamps(type: :utc_datetime)
+    timestamps(updated_at: false, type: :utc_datetime)
   end
 
   def changeset(changeset_or_struct, scope) do

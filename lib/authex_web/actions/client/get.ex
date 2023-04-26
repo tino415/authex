@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Actions.Client.Get do
-  use Web.Action.Get, [name: "client_id", do: (
+  use AuthexWeb.Meta.Action.Get, [name: "client_id", do: (
     plug AuthexWeb.Plugs.VerifyScopes, ["oauth:client:read"]
   )]
 

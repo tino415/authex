@@ -1,9 +1,9 @@
-defmodule Web.Action.List do
+defmodule AuthexWeb.Meta.Action.List do
   @callback list(Plug.Conn.t(), map()) :: Plug.Conn.t()
 
   defmacro __using__(opts) do
     quote do
-      use Web.Action, unquote(opts)
+      use AuthexWeb.Meta.Action, unquote(opts)
 
       @behaviour unquote(__MODULE__)
 

@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Plugs.AccessTokenAuthentication do
-  use Web.Plug
+  use AuthexWeb.Meta.Plug
 
   def init(opts), do: opts
 
@@ -12,8 +12,8 @@ defmodule AuthexWeb.Plugs.AccessTokenAuthentication do
               nil -> send_unauthorized(conn)
               client ->
                 conn
-                |> assign(:current_client, client)
-                |> assign(:current_claims, claims)
+                |> assign_current_client(client)
+                |> assign_current_claims(claims)
             end
           {:error, _} -> send_unauthorized(conn)
         end

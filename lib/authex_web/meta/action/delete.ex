@@ -1,11 +1,11 @@
-defmodule Web.Action.Delete do
+defmodule AuthexWeb.Meta.Action.Delete do
   @callback delete(Plug.Conn.t(), any()) :: Plug.Conn.t()
 
   defmacro __using__(opts) do
     name = Keyword.get(opts, :name, "id")
 
     quote do
-      use Web.Action, unquote(opts)
+      use AuthexWeb.Meta.Action, unquote(opts)
 
       @behaviour unquote(__MODULE__)
 

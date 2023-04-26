@@ -1,4 +1,4 @@
-defmodule Web.Action do
+defmodule AuthexWeb.Meta.Action do
   @callback run(Plug.Conn.t()) :: Plug.Conn.t()
 
   defmacro __using__(opts) do
@@ -6,8 +6,6 @@ defmodule Web.Action do
       use Plug.Builder
 
       alias AuthexWeb.View
-
-      import Web.Json
 
       @behaviour unquote(__MODULE__)
 

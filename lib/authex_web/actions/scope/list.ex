@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Actions.Scope.List do
-  use Web.Action.List do
+  use AuthexWeb.Meta.Action.List do
     plug AuthexWeb.Plugs.VerifyScopes, ["oauth:scope:read"]
   end
 

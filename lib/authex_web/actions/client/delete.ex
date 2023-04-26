@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Actions.Client.Delete do
-  use Web.Action.Delete, [name: "client_id", do: (
+  use AuthexWeb.Meta.Action.Delete, [name: "client_id", do: (
     plug AuthexWeb.Plugs.VerifyScopes, ["oauth:client:delete"]
   )]
 

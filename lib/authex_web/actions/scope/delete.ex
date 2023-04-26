@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Actions.Scope.Delete do
-  use Web.Action.Delete, [name: "scope_id", do: (
+  use AuthexWeb.Meta.Action.Delete, [name: "scope_id", do: (
     plug AuthexWeb.Plugs.VerifyScopes, ["oauth:scope:delete"]
   )]
 

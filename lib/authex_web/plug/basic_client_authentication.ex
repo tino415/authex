@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Plugs.BasicClientAuthentication do
-  use Web.Plug
+  use AuthexWeb.Meta.Plug
 
   alias Plug.BasicAuth
 
@@ -13,7 +13,7 @@ defmodule AuthexWeb.Plugs.BasicClientAuthentication do
             invalid_authorization(conn)
           client ->
             if Authex.client_secret_valid?(client, secret) do
-              assign(conn, :current_client, client)
+              assign_current_client(conn, client)
             else
               invalid_authorization(conn)
             end

@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Actions.Ping do
-  use Web.Action
+  use AuthexWeb.Meta.Action
 
   @impl true
   def run(conn) do

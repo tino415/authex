@@ -1,11 +1,11 @@
-defmodule Web.Plug do
+defmodule AuthexWeb.Meta.Plug do
   defmacro __using__(_opts) do
     quote do
       alias AuthexWeb.View
 
       import Plug.Conn
 
-      import Web.Json
+      import AuthexWeb.Plug
     end
   end
 end

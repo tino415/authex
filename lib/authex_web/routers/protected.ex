@@ -1,5 +1,5 @@
 defmodule AuthexWeb.Routers.Protected do
-  use Web.Router do
+  use AuthexWeb.Meta.Router do
     plug(Plugs.AccessTokenAuthentication)
   end
 
