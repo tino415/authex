@@ -10,7 +10,7 @@ defmodule AuthexWeb.Meta.Action.Update do
       @behaviour unquote(__MODULE__)
 
       def run(conn) do
-        update(conn, conn.query_params[unquote(name)], conn.body_params)
+        update(conn, conn.path_params[unquote(name)], conn.body_params)
       end
     end
   end

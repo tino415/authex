@@ -5,6 +5,7 @@ defmodule AuthexWeb.Actions.Token.Create do
 
   @impl true
   def create(conn, body_params) do
+    IO.inspect(body_params, label: "query_params")
     case Authex.create_token(conn.assigns.current_client, body_params) do
       {:ok, token} -> View.created(conn, token)
       {:error, changeset} -> View.invalid_request(conn, changeset)

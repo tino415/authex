@@ -1,5 +1,6 @@
 defmodule AuthexWeb.View do
   import PlugJason
+  import Plug.Conn
 
   def created(conn, body) do
     json_created(conn, body)
@@ -23,5 +24,11 @@ defmodule AuthexWeb.View do
 
   def internal_server_error(conn) do
     json_ise(conn, %{"message" => "internal server error"})
+  end
+
+  def redirect(conn, url) do
+    conn
+    |> put_resp_header("location", url)
+    |> send_resp(302, "Redirecting to #{url}")
   end
 end

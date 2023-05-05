@@ -3,6 +3,8 @@ defmodule AuthexWeb.Plugs.BasicClientAuthentication do
 
   alias Plug.BasicAuth
 
+  require Logger
+
   def init(opts), do: opts
 
   def call(conn, _opts) do
@@ -10,15 +12,19 @@ defmodule AuthexWeb.Plugs.BasicClientAuthentication do
       {id, secret} ->
         case Authex.get_client(id) do
           nil ->
+            Logger.info("unknown client")
             invalid_authorization(conn)
           client ->
             if Authex.client_secret_valid?(client, secret) do
+              Logger.info("verified client")
               assign_current_client(conn, client)
             else
+              Logger.info("invalid secret")
               invalid_authorization(conn)
             end
         end
       _ ->
+        Logger.info("missing authorization")
         request_basic_auth(conn)
     end
   end

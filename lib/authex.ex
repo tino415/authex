@@ -43,6 +43,10 @@ defmodule Authex do
     %Schemas.Client{}
     |> Schemas.Client.changeset(params)
     |> Repo.insert()
+    |> case do
+       {:ok, client} -> {:ok, Repo.preload(client, :scopes)}
+       r -> r
+    end
   end
 
   def delete_client!(client) do
@@ -53,6 +57,11 @@ defmodule Authex do
     client
     |> Schemas.Client.changeset(params)
     |> Repo.update()
+    # TODO: debug this, should be loaded if using cast assoc
+    |> case do
+         {:ok, client} -> {:ok, Repo.preload(client, scopes: :scope)}
+         r -> r
+     end
   end
 
   def client_secret_valid?(client, secret) do
@@ -63,6 +72,7 @@ defmodule Authex do
     %Schemas.Token{}
     |> Schemas.Token.changeset(client, body_params)
     |> Repo.insert()
+    # TODO: debug this, should be loaded if using cast assoc
     |> case do
          {:ok, token} -> {:ok, Schemas.Token.generate_access_token(token)}
          error -> error
@@ -96,5 +106,41 @@ defmodule Authex do
     scope
     |> Schemas.Scope.changeset(parameteres)
     |> Repo.update()
+  end
+
+  def get_flow(flow_id) do
+    Schemas.Flow
+    |> Repo.get(flow_id)
+    |> Repo.preload(:user)
+  end
+
+  def create_flow(parameters) do
+    %Schemas.Flow{}
+    |> Schemas.Flow.changeset(parameters)
+    |> Repo.insert()
+    |> case do
+       {:ok, flow} -> {:ok, Repo.preload(flow, :client)}
+       r -> r
+    end
+  end
+
+  def update_flow(flow, parameters) do
+    flow
+    |> Schemas.Flow.changeset(parameters)
+    |> Repo.update()
+    |> case do
+         {:ok, flow} -> {:ok, Repo.preload(flow, :client)}
+         r -> r
+    end
+  end
+
+  def submit_flow(flow) do
+    flow
+    |> Schemas.Flow.submit_changeset()
+    |> Repo.update()
+    |> case do
+       {:ok, flow} -> {:ok, Repo.preload(flow, :client)}
+       r -> r
+    end
   end
 end

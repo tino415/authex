@@ -5,13 +5,13 @@ defmodule Domain.Changeset do
     if get_field(changeset, field) do
       changeset
     else
-      dt = 
-        DateTime.utc_now()
-        |> DateTime.truncate(:second)
-        |> DateTime.add(number, unit)
-
+      dt = DateTime.add(datetime_now(), number, unit)
       put_change(changeset, field, dt)
     end
+  end
+
+  def put_now(changeset, field) do
+    put_change(changeset, field, datetime_now())
   end
 
   def validate_fields_equal(changeset, first, second) do
@@ -23,7 +23,25 @@ defmodule Domain.Changeset do
   end
 
   def generate_secret(changeset, field) do
-    put_change(changeset, field, Crypto.generate_secret())
+    if is_nil(changeset.data.id) do
+      put_change(changeset, field, Crypto.generate_secret())
+    else
+      changeset
+    end
+  end
+
+  def put_string_split_by_space(changeset, from, to) do
+    if changed?(changeset, from) do
+      values =
+        changeset
+        |> get_change(from, "")
+        |> String.trim()
+        |> String.split(" ")
+ 
+      put_change(changeset, to, values)
+    else
+      changeset
+    end
   end
 
   def put_hashed(changeset, unhashed_field, target_field) do
@@ -34,5 +52,10 @@ defmodule Domain.Changeset do
     else
       changeset
     end
+  end
+
+  defp datetime_now do
+    DateTime.utc_now()
+    |> DateTime.truncate(:second)
   end
 end

@@ -33,5 +33,7 @@ defmodule AuthexWeb.Routers.Protected do
 
   delete "/scopes/:scope_id", to: Actions.Scope.Delete
 
+  put "/flows/:flow_id", to: Actions.Flow.Update
+
   match _, to: Actions.Errors.NotFound
 end

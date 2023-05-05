@@ -6,7 +6,8 @@ defmodule Crypto do
 
   def generate_secret do
     :crypto.strong_rand_bytes(32)
-    |> :base64.encode()
+    |> base64_url_encode()
+    |> IO.inspect(label: "secret")
   end
 
   defp base64_url_encode(string) do

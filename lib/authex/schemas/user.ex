@@ -1,6 +1,8 @@
 defmodule Authex.Schemas.User do
   use Domain.Schema
 
+  import Ecto.Query
+
   @derive {Jason.Encoder, only: [:id, :email]}
   schema "users" do
     field(:email, :string)
@@ -16,6 +18,18 @@ defmodule Authex.Schemas.User do
     |> cast(params, [:email, :password, :password_verify])
     |> put_hashed(:password, :password_hash)
     |> validate()
+  end
+
+  def password_valid?(user, password) do
+    IO.inspect({user.password_hash, password, Crypto.hash(password)}, label: "password_valid?")
+    Crypto.hash(password) == user.password_hash
+  end
+
+  def query_by_username(username) do
+    from(
+      u in __MODULE__,
+      where: u.email == ^username
+    )
   end
 
   defp validate(changeset) do

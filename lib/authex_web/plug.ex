@@ -10,7 +10,7 @@ defmodule AuthexWeb.Plug do
   end
 
   def current_scope(conn) do
-    Map.get(conn.assigns.current_claims || %{}, "scope", "")
+    Map.get(conn.assigns.current_claims || %{}, "scope", "") || ""
   end
 
   def assign_current_claims(conn, claims) do

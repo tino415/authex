@@ -10,6 +10,8 @@ defmodule Authex.Schemas.Token do
     field :expires_at, :utc_datetime
     field :scope, :string, virtual: true
     field :scope_list, {:array, :string}, virtual: true
+    field :grant_type, Ecto.Enum, values: [:client_credentials, :authorization_code]
+
     belongs_to(:client, Schemas.Client)
 
     has_many(:token_scopes, Schemas.TokenScope)
@@ -19,12 +21,12 @@ defmodule Authex.Schemas.Token do
 
   def changeset(struct_or_changeset, client, body_params) do
     struct_or_changeset
-    |> cast(body_params, [:scope])
+    |> cast(body_params, [:scope, :grant_type])
     |> change(expires_in: 3600)
     |> put_now_moved_if_empty(:expires_at, 3600, :second)
     |> put_assoc(:client, client)
-    |> create_scopes_list()
-    |> validate_required([:expires_in, :expires_at])
+    |> put_string_split_by_space(:scope, :scope_list)
+    |> validate_required([:expires_in, :expires_at, :grant_type])
     |> prepare_changes(fn changeset ->
       if changed?(changeset, :scope_list) do
         provided_scopes = get_change(changeset, :scope_list)
@@ -80,19 +82,5 @@ defmodule Authex.Schemas.Token do
       )
 
     Map.put(token, :access_token, access_token)
-  end
-
-  defp create_scopes_list(changeset) do
-    if changed?(changeset, :scope) do
-      scope_list =
-        changeset
-        |> get_change(:scope)
-        |> String.trim()
-        |> String.split(" ")
-
-      put_change(changeset, :scope_list, scope_list)
-    else
-      changeset
-    end
   end
 end
