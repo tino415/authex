@@ -3,9 +3,11 @@ defmodule Authex.Schemas.Flow do
 
   alias Authex.Schemas
 
-  @derive {Jason.Encoder, only: [:grant_type, :code]}
+  import Ecto.Query
+
+  @derive {Jason.Encoder, only: [:response, :code]}
   schema "flows" do
-    field :grant_type, Ecto.Enum, values: [:authorization_code]
+    field :response, Ecto.Enum, values: [:code, :none], default: :none
     # TODO: make url type
     field :redirect_uri, :string
     field :submitted_at, :utc_datetime
@@ -13,6 +15,7 @@ defmodule Authex.Schemas.Flow do
     field :code_hash, :string
     field :username, :string, virtual: true
     field :password, :string, virtual: true
+    # TODO: add expires at and check it on refresh token
 
     belongs_to :client, Schemas.Client
     belongs_to :token, Schemas.Token
@@ -23,7 +26,7 @@ defmodule Authex.Schemas.Flow do
 
   def changeset(struct_or_schema, params) do
     struct_or_schema
-    |> cast(params, [:client_id, :grant_type, :redirect_uri, :username, :password])
+    |> cast(params, [:client_id, :response, :redirect_uri, :username, :password])
     |> verify()
   end
 
@@ -34,8 +37,19 @@ defmodule Authex.Schemas.Flow do
     |> verify()
   end
 
+  def query_by_code(code) do
+    # TODO: check if code is not already used
+    # TODO: check if grant authorization timeout not expired
+    from(
+      c in __MODULE__,
+      where: c.code_hash == ^Crypto.hash(code)
+    )
+  end
+
   defp verify(changeset) do
     changeset
+    |> validate_inclusion(:response, [:code])
+    |> validate_submit()
     |> verify_user()
     |> generate_code()
   end
@@ -52,7 +66,6 @@ defmodule Authex.Schemas.Flow do
                 get_change(changeset, :username)
               )
             )
-            |> IO.inspect(label: "user")
 
           case user do
             nil ->
@@ -78,6 +91,22 @@ defmodule Authex.Schemas.Flow do
       |> put_hashed(:code, :code_hash)
     else
       changeset
+    end
+  end
+
+  defp validate_submit(changeset) do
+    cond do
+      not changed?(changeset, :submitted_at) ->
+        changeset
+
+      not is_nil(changeset.data.submitted_at) ->
+        add_error(changeset, :submitted_at, "already submitted")
+
+      is_nil(get_field(changeset, :user_id)) ->
+        add_error(changeset, :user, "was not identified")
+
+      true ->
+        changeset
     end
   end
 end

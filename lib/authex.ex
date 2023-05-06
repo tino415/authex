@@ -68,9 +68,9 @@ defmodule Authex do
     Schemas.Client.secret_valid?(client, secret)
   end
 
-  def create_token(client, body_params) do
+  def create_token(client, flow, body_params) do
     %Schemas.Token{}
-    |> Schemas.Token.changeset(client, body_params)
+    |> Schemas.Token.changeset(client, flow, body_params)
     |> Repo.insert()
     # TODO: debug this, should be loaded if using cast assoc
     |> case do
@@ -112,6 +112,12 @@ defmodule Authex do
     Schemas.Flow
     |> Repo.get(flow_id)
     |> Repo.preload(:user)
+  end
+
+  def get_flow_by_code(code) do
+    code
+    |> Schemas.Flow.query_by_code()
+    |> Repo.one()
   end
 
   def create_flow(parameters) do
