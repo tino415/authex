@@ -4,8 +4,7 @@ defmodule Authex.Schemas.Flow do
   @derive {Jason.Encoder, only: [:response, :code]}
   schema "flows" do
     field(:response, Ecto.Enum, values: [:code, :none], default: :none)
-    # TODO: make url type
-    field(:redirect_uri, :string)
+    field(:redirect_uri, Types.URI)
     field(:submitted_at, :utc_datetime)
     field(:code, :string, virtual: true)
     field(:code_hash, :string)

@@ -6,8 +6,7 @@ defmodule Authex.Schemas.Client do
     field(:secret, :string, virtual: true)
     field(:secret_hash, :string)
     field(:name, :string)
-    # TODO: url type
-    field(:authorization_url, :string)
+    field(:authorization_url, Types.URI)
 
     has_many(:scopes, Schemas.ClientScope, on_replace: :delete)
 
@@ -25,15 +24,6 @@ defmodule Authex.Schemas.Client do
   end
 
   def secret_valid?(client, secret) do
-    IO.inspect(
-      %{
-        secret: secret,
-        client_secret_hash: client.secret_hash,
-        hash: Crypto.hash(secret)
-      },
-      label: "secret validation"
-    )
-
     Crypto.hash(secret) == client.secret_hash
   end
 

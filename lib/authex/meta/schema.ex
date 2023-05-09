@@ -4,6 +4,7 @@ defmodule Domain.Meta.Schema do
       use Ecto.Schema
 
       alias Authex.Schemas
+      alias Authex.Types
 
       import Ecto.Changeset
       import Domain.Helpers.Changeset
