@@ -10,7 +10,6 @@ defmodule Authex.Schemas.Flow do
     field(:code_hash, :string)
     field(:username, :string, virtual: true)
     field(:password, :string, virtual: true)
-    # TODO: add expires at and check it on refresh token
 
     belongs_to(:client, Schemas.Client)
     belongs_to(:token, Schemas.Token)
@@ -32,12 +31,21 @@ defmodule Authex.Schemas.Flow do
     |> verify()
   end
 
-  def query_by_code(code) do
-    # TODO: check if code is not already used
-    # TODO: check if grant authorization timeout not expired
+  def query_by_code_without_token(code) do
     from(
       c in __MODULE__,
-      where: c.code_hash == ^Crypto.hash(code)
+      where: c.code_hash == ^Crypto.hash(code),
+      where: is_nil(c.token_id),
+      where: c.inserted_at < ^authorization_expiration()
+    )
+  end
+
+  def query_by_refresh_token(refresh_token) do
+    from(
+      c in __MODULE__,
+      join: t in assoc(c, :token),
+      where: t.refersh_token == ^refresh_token,
+      where: c.inserted_at < ^session_expiration()
     )
   end
 
@@ -101,4 +109,8 @@ defmodule Authex.Schemas.Flow do
         changeset
     end
   end
+
+  defp authorization_expiration, do: DateTime.add(DateTime.utc_now(), -1 * 3600)
+
+  defp session_expiration, do: DateTime.add(DateTime.utc_now(), -1 * 8 * 24 * 3600)
 end

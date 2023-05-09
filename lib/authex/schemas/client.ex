@@ -1,12 +1,20 @@
 defmodule Authex.Schemas.Client do
   use Domain.Meta.Schema
 
-  @derive {Jason.Encoder, only: [:id, :name, :secret, :scopes, :authorization_url]}
+  @derive {Jason.Encoder, only: [
+              :id,
+              :name,
+              :secret,
+              :scopes,
+              :authorization_url,
+              :authorization_code_alloweed
+            ]}
   schema "clients" do
     field(:secret, :string, virtual: true)
     field(:secret_hash, :string)
     field(:name, :string)
     field(:authorization_url, Types.URI)
+    field(:authorization_code_alloweed, :boolean, default: false)
 
     has_many(:scopes, Schemas.ClientScope, on_replace: :delete)
 
@@ -15,10 +23,10 @@ defmodule Authex.Schemas.Client do
 
   def changeset(schema_or_changeset, params) do
     schema_or_changeset
-    |> cast(params, [:name, :authorization_url])
+    |> cast(params, [:name, :authorization_url, :authorization_code_alloweed])
     |> generate_secret(:secret)
     |> put_hashed(:secret, :secret_hash)
-    # TODO: if authorization_code alloweed, authorization_url is required
+    |> validate_authorization_code()
     |> validate_required([:secret_hash, :name])
     |> cast_assoc(:scopes, with: &Schemas.ClientScope.changeset/2)
   end
@@ -40,5 +48,17 @@ defmodule Authex.Schemas.Client do
       preload: [scopes: :scope],
       where: clients.id == ^client_id
     )
+  end
+
+  defp validate_authorization_code(changeset) do
+    if get_field(changeset, :authorization_code_alloweed) do
+      validate_required(
+        changeset,
+        :authorization_url,
+        message: "required if authorization code flow alloweed"
+      )
+    else
+      changeset
+    end
   end
 end

@@ -5,7 +5,15 @@ defmodule AuthexWeb.Actions.Token.Create do
 
   @impl true
   def create(conn, %{"code" => code} = params) do
-    with %{} = flow <- Authex.get_flow_by_code(code) do
+    with %{} = flow <- Authex.get_flow_by_code_without_token(code) do
+      do_create(conn, flow, params)
+    else
+      nil -> View.unauthorized(conn)
+    end
+  end
+
+  def create(conn, %{"refresh_token" => refresh_token} = params) do
+    with %{} = flow <- Authex.get_flow_by_refresh_token(refresh_token) do
       do_create(conn, flow, params)
     else
       nil -> View.unauthorized(conn)

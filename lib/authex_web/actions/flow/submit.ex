@@ -7,19 +7,11 @@ defmodule AuthexWeb.Actions.Flow.Submit do
          {:ok, flow} <- Authex.submit_flow(flow) do
       query_params = %{"code" => flow.code}
 
-      # TODO: state handling
-      # query_params =
-      # if flow.state do
-      # Map.put(query_params, "state", flow.state)
-      # else
-      # query_params
-      # end
+      # TODO: handle state
 
-      url = URI.parse(flow.redirect_uri)
-      url = %{url | query: URI.encode_query(query_params)}
-      url = URI.to_string(url)
+      url = %{flow.redirect_uri | query: URI.encode_query(query_params)}
 
-      View.redirect(conn, url)
+      View.redirect(conn, to_string(url))
     else
       nil -> View.not_found(conn)
       {:error, changeset} -> View.invalid_request(conn, changeset)

@@ -114,9 +114,15 @@ defmodule Authex do
     |> Repo.preload(:user)
   end
 
-  def get_flow_by_code(code) do
+  def get_flow_by_code_without_token(code) do
     code
-    |> Schemas.Flow.query_by_code()
+    |> Schemas.Flow.query_by_code_without_token()
+    |> Repo.one()
+  end
+
+  def get_flow_by_refresh_token(refresh_token) do
+    refresh_token
+    |> Schemas.Flow.query_by_refresh_token()
     |> Repo.one()
   end
 
