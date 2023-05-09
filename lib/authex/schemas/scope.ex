@@ -1,16 +1,12 @@
 defmodule Authex.Schemas.Scope do
-  use Domain.Schema
-
-  alias Authex.Schemas
-
-  import Ecto.Query
+  use Domain.Meta.Schema
 
   @derive {Jason.Encoder, only: [:id, :name]}
   schema "scopes" do
-    field :name, :string
-    field :build_in, :boolean, default: false
+    field(:name, :string)
+    field(:build_in, :boolean, default: false)
 
-    has_many :scope_clients, Schemas.ClientScope
+    has_many(:scope_clients, Schemas.ClientScope)
 
     timestamps(type: :utc_datetime)
   end

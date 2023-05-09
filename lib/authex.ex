@@ -44,8 +44,8 @@ defmodule Authex do
     |> Schemas.Client.changeset(params)
     |> Repo.insert()
     |> case do
-       {:ok, client} -> {:ok, Repo.preload(client, :scopes)}
-       r -> r
+      {:ok, client} -> {:ok, Repo.preload(client, :scopes)}
+      r -> r
     end
   end
 
@@ -59,9 +59,9 @@ defmodule Authex do
     |> Repo.update()
     # TODO: debug this, should be loaded if using cast assoc
     |> case do
-         {:ok, client} -> {:ok, Repo.preload(client, scopes: :scope)}
-         r -> r
-     end
+      {:ok, client} -> {:ok, Repo.preload(client, scopes: :scope)}
+      r -> r
+    end
   end
 
   def client_secret_valid?(client, secret) do
@@ -74,9 +74,9 @@ defmodule Authex do
     |> Repo.insert()
     # TODO: debug this, should be loaded if using cast assoc
     |> case do
-         {:ok, token} -> {:ok, Schemas.Token.generate_access_token(token)}
-         error -> error
-     end
+      {:ok, token} -> {:ok, Schemas.Token.generate_access_token(token)}
+      error -> error
+    end
   end
 
   def list_scopes(pagination) do
@@ -125,8 +125,8 @@ defmodule Authex do
     |> Schemas.Flow.changeset(parameters)
     |> Repo.insert()
     |> case do
-       {:ok, flow} -> {:ok, Repo.preload(flow, :client)}
-       r -> r
+      {:ok, flow} -> {:ok, Repo.preload(flow, :client)}
+      r -> r
     end
   end
 
@@ -135,8 +135,8 @@ defmodule Authex do
     |> Schemas.Flow.changeset(parameters)
     |> Repo.update()
     |> case do
-         {:ok, flow} -> {:ok, Repo.preload(flow, :client)}
-         r -> r
+      {:ok, flow} -> {:ok, Repo.preload(flow, :client)}
+      r -> r
     end
   end
 
@@ -145,8 +145,8 @@ defmodule Authex do
     |> Schemas.Flow.submit_changeset()
     |> Repo.update()
     |> case do
-       {:ok, flow} -> {:ok, Repo.preload(flow, :client)}
-       r -> r
+      {:ok, flow} -> {:ok, Repo.preload(flow, :client)}
+      r -> r
     end
   end
 end

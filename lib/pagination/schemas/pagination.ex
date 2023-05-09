@@ -1,9 +1,11 @@
 defmodule Pagination.Schemas.Pagination do
-  use Domain.Schema
+  use Ecto.Schema
+
+  import Ecto.Changeset
 
   embedded_schema do
-    field :page, :integer, default: 0
-    field :page_size, :integer, default: 50
+    field(:page, :integer, default: 0)
+    field(:page_size, :integer, default: 50)
   end
 
   def changeset(schema_or_struct, params) do

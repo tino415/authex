@@ -14,6 +14,7 @@ defmodule AuthexWeb.Plugs.BasicClientAuthentication do
           nil ->
             Logger.info("unknown client")
             invalid_authorization(conn)
+
           client ->
             if Authex.client_secret_valid?(client, secret) do
               Logger.info("verified client")
@@ -23,6 +24,7 @@ defmodule AuthexWeb.Plugs.BasicClientAuthentication do
               invalid_authorization(conn)
             end
         end
+
       _ ->
         Logger.info("missing authorization")
         request_basic_auth(conn)

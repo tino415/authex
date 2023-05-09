@@ -1,6 +1,6 @@
 defmodule AuthexWeb.Actions.Scope.Create do
   use AuthexWeb.Meta.Action.Create do
-    plug AuthexWeb.Plugs.VerifyScopes, ["oauth:scope:create"]
+    plug(AuthexWeb.Plugs.VerifyScopes, ["oauth:scope:create"])
   end
 
   @impl true

@@ -1,25 +1,21 @@
 defmodule Authex.Schemas.Flow do
-  use Domain.Schema
-
-  alias Authex.Schemas
-
-  import Ecto.Query
+  use Domain.Meta.Schema
 
   @derive {Jason.Encoder, only: [:response, :code]}
   schema "flows" do
-    field :response, Ecto.Enum, values: [:code, :none], default: :none
+    field(:response, Ecto.Enum, values: [:code, :none], default: :none)
     # TODO: make url type
-    field :redirect_uri, :string
-    field :submitted_at, :utc_datetime
-    field :code, :string, virtual: true
-    field :code_hash, :string
-    field :username, :string, virtual: true
-    field :password, :string, virtual: true
+    field(:redirect_uri, :string)
+    field(:submitted_at, :utc_datetime)
+    field(:code, :string, virtual: true)
+    field(:code_hash, :string)
+    field(:username, :string, virtual: true)
+    field(:password, :string, virtual: true)
     # TODO: add expires at and check it on refresh token
 
-    belongs_to :client, Schemas.Client
-    belongs_to :token, Schemas.Token
-    belongs_to :user, Schemas.User
+    belongs_to(:client, Schemas.Client)
+    belongs_to(:token, Schemas.Token)
+    belongs_to(:user, Schemas.User)
 
     timestamps(type: :utc_datetime)
   end
@@ -61,15 +57,12 @@ defmodule Authex.Schemas.Flow do
       else
         prepare_changes(changeset, fn changeset ->
           user =
-            changeset.repo.one(
-              Schemas.User.query_by_username(
-                get_change(changeset, :username)
-              )
-            )
+            changeset.repo.one(Schemas.User.query_by_username(get_change(changeset, :username)))
 
           case user do
             nil ->
               add_error(changeset, :username, "Invalid password or unknown user")
+
             user ->
               if Schemas.User.password_valid?(user, get_change(changeset, :password)) do
                 put_assoc(changeset, :user, user)

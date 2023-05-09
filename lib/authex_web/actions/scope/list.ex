@@ -1,8 +1,7 @@
 defmodule AuthexWeb.Actions.Scope.List do
   use AuthexWeb.Meta.Action.List do
-    plug AuthexWeb.Plugs.VerifyScopes, ["oauth:scope:read"]
+    plug(AuthexWeb.Plugs.VerifyScopes, ["oauth:scope:read"])
   end
-
 
   @impl true
   def list(conn, query_params) do

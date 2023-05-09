@@ -7,6 +7,7 @@ defmodule AuthexWeb.Plugs.AccessTokenAuthentication do
 
   def call(conn, _opts) do
     IO.puts("auth")
+
     case get_req_header(conn, "authorization") do
       ["Bearer " <> access_token] ->
         case Joken.verify_and_validate(%{}, access_token) do
@@ -21,10 +22,12 @@ defmodule AuthexWeb.Plugs.AccessTokenAuthentication do
                 |> assign_current_client(client)
                 |> assign_current_claims(claims)
             end
+
           {:error, _} ->
             Logger.info("invalid access token")
             send_unauthorized(conn)
         end
+
       _ ->
         Logger.info("missing access token")
         send_unauthorized(conn)

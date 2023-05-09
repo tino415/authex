@@ -1,4 +1,4 @@
-defmodule Domain.Changeset do
+defmodule Domain.Helpers.Changeset do
   import Ecto.Changeset
 
   def put_now_moved_if_empty(changeset, field, number, unit) do
@@ -37,7 +37,7 @@ defmodule Domain.Changeset do
         |> get_change(from, "")
         |> String.trim()
         |> String.split(" ")
- 
+
       put_change(changeset, to, values)
     else
       changeset

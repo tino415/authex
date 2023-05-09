@@ -10,6 +10,7 @@ defmodule AuthexWeb.Actions.Flow.Create do
         url = URI.to_string(url)
 
         View.redirect(conn, url)
+
       {:error, changeset} ->
         View.invalid_request(conn, changeset)
     end

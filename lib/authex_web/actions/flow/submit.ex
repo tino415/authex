@@ -9,11 +9,11 @@ defmodule AuthexWeb.Actions.Flow.Submit do
 
       # TODO: state handling
       # query_params =
-        # if flow.state do
-          # Map.put(query_params, "state", flow.state)
-        # else
-          # query_params
-        # end
+      # if flow.state do
+      # Map.put(query_params, "state", flow.state)
+      # else
+      # query_params
+      # end
 
       url = URI.parse(flow.redirect_uri)
       url = %{url | query: URI.encode_query(query_params)}

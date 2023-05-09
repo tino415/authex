@@ -1,11 +1,9 @@
 defmodule Authex.Schemas.TokenScope do
-  use Domain.Schema
-
-  alias Authex.Schemas
+  use Domain.Meta.Schema
 
   schema "token_scopes" do
-    belongs_to :token, Schemas.Token
-    belongs_to :scope, Schemas.Scope
+    belongs_to(:token, Schemas.Token)
+    belongs_to(:scope, Schemas.Scope)
 
     timestamps(updated_at: false, type: :utc_datetime)
   end

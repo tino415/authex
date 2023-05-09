@@ -1,6 +1,6 @@
 defmodule AuthexWeb.Actions.Client.Create do
   use AuthexWeb.Meta.Action.Create do
-    plug AuthexWeb.Plugs.VerifyScopes, ["oauth:client:create"]
+    plug(AuthexWeb.Plugs.VerifyScopes, ["oauth:client:create"])
   end
 
   @impl true

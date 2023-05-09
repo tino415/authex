@@ -11,7 +11,7 @@ defmodule AuthexWeb.Meta.Action do
 
       unquote(Keyword.get(opts, :do))
 
-      plug :do_run
+      plug(:do_run)
 
       def do_run(conn, _opts), do: run(conn)
     end

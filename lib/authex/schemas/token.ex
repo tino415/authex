@@ -1,16 +1,14 @@
 defmodule Authex.Schemas.Token do
-  use Domain.Schema
-
-  alias Authex.Schemas
+  use Domain.Meta.Schema
 
   @derive {Jason.Encoder, only: [:access_token, :expires_in, :scope]}
   schema "tokens" do
-    field :access_token, :string, virtual: true
-    field :expires_in, :integer
-    field :expires_at, :utc_datetime
-    field :scope, :string, virtual: true
-    field :scope_list, {:array, :string}, virtual: true
-    field :grant_type, Ecto.Enum, values: [:client_credentials, :authorization_code]
+    field(:access_token, :string, virtual: true)
+    field(:expires_in, :integer)
+    field(:expires_at, :utc_datetime)
+    field(:scope, :string, virtual: true)
+    field(:scope_list, {:array, :string}, virtual: true)
+    field(:grant_type, Ecto.Enum, values: [:client_credentials, :authorization_code])
 
     has_one(:flow, Schemas.Flow)
     belongs_to(:client, Schemas.Client)
@@ -73,13 +71,13 @@ defmodule Authex.Schemas.Token do
       Joken.generate_and_sign(
         %{},
         %{
-           "iss" => "http://localhost:4000",
-           "aud" => token.client_id,
-           "exp" => DateTime.to_unix(token.expires_at),
-           "nbf" => DateTime.to_unix(token.inserted_at),
-           "iat" => DateTime.to_unix(token.inserted_at),
-           "jti" => token.id,
-           "scope" => token.scope
+          "iss" => "http://localhost:4000",
+          "aud" => token.client_id,
+          "exp" => DateTime.to_unix(token.expires_at),
+          "nbf" => DateTime.to_unix(token.inserted_at),
+          "iat" => DateTime.to_unix(token.inserted_at),
+          "jti" => token.id,
+          "scope" => token.scope
         }
       )
 

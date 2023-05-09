@@ -1,7 +1,7 @@
 defmodule AuthexWeb.Actions.User.Get do
-  use AuthexWeb.Meta.Action.Get, [name: "user_id", do: (
-    plug AuthexWeb.Plugs.VerifyScopes, ["oauth:user:read"]
-  )]
+  use AuthexWeb.Meta.Action.Get,
+    name: "user_id",
+    do: plug(AuthexWeb.Plugs.VerifyScopes, ["oauth:user:read"])
 
   @impl true
   def get(conn, user_id) do

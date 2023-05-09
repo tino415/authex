@@ -1,7 +1,5 @@
 defmodule Authex.Schemas.User do
-  use Domain.Schema
-
-  import Ecto.Query
+  use Domain.Meta.Schema
 
   @derive {Jason.Encoder, only: [:id, :email]}
   schema "users" do
@@ -21,7 +19,6 @@ defmodule Authex.Schemas.User do
   end
 
   def password_valid?(user, password) do
-    IO.inspect({user.password_hash, password, Crypto.hash(password)}, label: "password_valid?")
     Crypto.hash(password) == user.password_hash
   end
 
