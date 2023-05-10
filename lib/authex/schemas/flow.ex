@@ -66,22 +66,23 @@ defmodule Authex.Schemas.Flow do
           user =
             changeset.repo.one(Schemas.User.query_by_username(get_change(changeset, :username)))
 
-          case user do
-            nil ->
-              add_error(changeset, :username, "Invalid password or unknown user")
-
-            user ->
-              if Schemas.User.password_valid?(user, get_change(changeset, :password)) do
-                put_assoc(changeset, :user, user)
-              else
-                add_error(changeset, :username, "Invalid password or unknown user")
-              end
-          end
+          user_password_validate(changeset, user)
         end)
       end
     else
       changeset
     end
+  end
+
+  defp user_password_validate(changeset, user) do
+    cond do
+      is_nil(user) ->
+        add_error(changeset, :username, "Invalid password or unknown user")
+      not Schemas.User.password_valid?(user, get_change(changeset, :password)) ->
+        add_error(changeset, :username, "Invalid password or unknown user")
+      true ->
+        put_assoc(changeset, :user, user)
+    end 
   end
 
   defp generate_code(changeset) do
