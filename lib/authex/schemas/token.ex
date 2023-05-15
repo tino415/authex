@@ -8,6 +8,7 @@ defmodule Authex.Schemas.Token do
     field(:expires_at, :utc_datetime)
     field(:scope, :string, virtual: true)
     field(:scope_list, {:array, :string}, virtual: true)
+    field(:offline_access, :boolean, default: false)
     field(:grant_type, Ecto.Enum,
       values: [
         :client_credentials,
@@ -35,7 +36,7 @@ defmodule Authex.Schemas.Token do
     |> validate_required([:expires_in, :expires_at, :grant_type])
     |> validate_by_grant_type()
     |> resolve_flow(flow)
-    |> generate_secret(:refresh_token)
+    |> generate_refresh_token()
     |> prepare_changes(& prepare_and_validate_scopes(&1, client))
   end
 
@@ -64,7 +65,15 @@ defmodule Authex.Schemas.Token do
       changeset
     else
       provided_scopes = get_change(changeset, :scope_list)
-      existing_scopes = retrieve_scopes(changeset.repo, client.id, provided_scopes)
+
+      existing_scopes =
+        retrieve_scopes(
+          changeset.repo,
+          client.id,
+          get_field(changeset, :grant_type),
+          provided_scopes
+        )
+
       existing_scopes_names = Enum.map(existing_scopes, & &1.name)
       changeset = validate_scopes_assigned(changeset, provided_scopes, existing_scopes_names)
 
@@ -76,10 +85,11 @@ defmodule Authex.Schemas.Token do
     end
   end
 
-  defp retrieve_scopes(repo, client_id, provided_scopes) do
+  defp retrieve_scopes(repo, client_id, grant_type, provided_scopes) do
     repo.all(
       Schemas.Scope.for_client_query(
         client_id,
+        grant_type,
         provided_scopes
       )
     )
@@ -99,6 +109,17 @@ defmodule Authex.Schemas.Token do
     Enum.map(existing_scopes, fn scope ->
       Schemas.TokenScope.changeset(%Schemas.TokenScope{}, scope)
     end)
+  end
+
+  defp generate_refresh_token(changeset) do
+    cond do
+      not is_nil(get_field(changeset, :refresh_token)) ->
+        changeset
+      not get_field(changeset, :offline_access, true) ->
+        changeset
+      true ->
+        generate_secret(changeset, :refresh_token)
+    end
   end
 
   defp access_token_generate(token) do
