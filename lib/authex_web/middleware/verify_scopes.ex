@@ -1,5 +1,5 @@
-defmodule AuthexWeb.Plugs.VerifyScopes do
-  use AuthexWeb.Meta.Plug
+defmodule AuthexWeb.Middlewares.VerifyScopes do
+  use AuthexWeb.Meta.Middleware
 
   require Logger
 

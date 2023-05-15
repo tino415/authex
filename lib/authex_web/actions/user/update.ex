@@ -1,7 +1,7 @@
 defmodule AuthexWeb.Actions.User.Update do
   use AuthexWeb.Meta.Action.Update,
     name: "user_id",
-    do: plug(AuthexWeb.Plugs.VerifyScopes, ["oauth:user:update"])
+    do: plug(AuthexWeb.Middlewares.VerifyScopes, ["oauth:user:update"])
 
   @impl true
   def update(conn, user_id, body_params) do

@@ -1,7 +1,7 @@
 defmodule AuthexWeb.Actions.Flow.Update do
   use AuthexWeb.Meta.Action.Update,
     name: "flow_id",
-    do: plug(AuthexWeb.Plugs.VerifyScopes, ["oauth:flow"])
+    do: plug(AuthexWeb.Middlewares.VerifyScopes, ["oauth:flow"])
 
   @impl true
   def update(conn, flow_id, params) do

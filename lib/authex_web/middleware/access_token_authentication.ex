@@ -1,5 +1,5 @@
-defmodule AuthexWeb.Plugs.AccessTokenAuthentication do
-  use AuthexWeb.Meta.Plug
+defmodule AuthexWeb.Middlewares.AccessTokenAuthentication do
+  use AuthexWeb.Meta.Middleware
 
   require Logger
 

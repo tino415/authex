@@ -1,5 +1,5 @@
-defmodule AuthexWeb.Plugs.BasicClientAuthentication do
-  use AuthexWeb.Meta.Plug
+defmodule AuthexWeb.Middlewares.BasicClientAuthentication do
+  use AuthexWeb.Meta.Middleware
 
   alias Plug.BasicAuth
 

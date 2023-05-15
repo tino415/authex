@@ -1,7 +1,7 @@
 defmodule AuthexWeb.Actions.User.Delete do
   use AuthexWeb.Meta.Action.Delete,
     name: "user_id",
-    do: plug(AuthexWeb.Plugs.VerifyScopes, ["oauth:user:delete"])
+    do: plug(AuthexWeb.Middlewares.VerifyScopes, ["oauth:user:delete"])
 
   @impl true
   def delete(conn, user_id) do

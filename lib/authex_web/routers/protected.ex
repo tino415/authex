@@ -1,6 +1,6 @@
 defmodule AuthexWeb.Routers.Protected do
   use AuthexWeb.Meta.Router do
-    plug(Plugs.AccessTokenAuthentication)
+    plug(Middlewares.AccessTokenAuthentication)
   end
 
   get("/users", to: Actions.User.List)

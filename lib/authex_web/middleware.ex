@@ -1,4 +1,4 @@
-defmodule AuthexWeb.Plug do
+defmodule AuthexWeb.Middleware do
   import Plug.Conn
 
   def current_client(conn) do

@@ -3,7 +3,7 @@ defmodule AuthexWeb.Meta.Router do
     quote do
       use Plug.Router
 
-      alias AuthexWeb.Plugs
+      alias AuthexWeb.Middlewares
       alias AuthexWeb.Actions
       alias AuthexWeb.Routers
 

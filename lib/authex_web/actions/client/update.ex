@@ -1,7 +1,7 @@
 defmodule AuthexWeb.Actions.Client.Update do
   use AuthexWeb.Meta.Action.Update,
     name: "client_id",
-    do: plug(AuthexWeb.Plugs.VerifyScopes, ["oauth:client:update"])
+    do: plug(AuthexWeb.Middlewares.VerifyScopes, ["oauth:client:update"])
 
   @impl true
   def update(conn, client_id, body_params) do

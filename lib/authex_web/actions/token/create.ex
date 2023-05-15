@@ -1,6 +1,6 @@
 defmodule AuthexWeb.Actions.Token.Create do
   use AuthexWeb.Meta.Action.Create do
-    plug(AuthexWeb.Plugs.BasicClientAuthentication)
+    plug(AuthexWeb.Middlewares.BasicClientAuthentication)
   end
 
   @impl true

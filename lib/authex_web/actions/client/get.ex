@@ -1,7 +1,7 @@
 defmodule AuthexWeb.Actions.Client.Get do
   use AuthexWeb.Meta.Action.Get,
     name: "client_id",
-    do: plug(AuthexWeb.Plugs.VerifyScopes, ["oauth:client:read"])
+    do: plug(AuthexWeb.Middlewares.VerifyScopes, ["oauth:client:read"])
 
   @impl true
   def get(conn, client_id) do
