@@ -5,9 +5,8 @@ defmodule AuthexWeb.Actions.Client.Get do
 
   @impl true
   def get(conn, client_id) do
-    case Authex.get_client(client_id) do
-      nil -> View.not_found(conn)
-      client -> View.success(conn, client)
+    with %{} = client <- Authex.get_client(client_id) do
+      View.success(conn, client)
     end
   end
 end

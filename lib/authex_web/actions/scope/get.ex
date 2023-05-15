@@ -5,9 +5,8 @@ defmodule AuthexWeb.Actions.Scope.Get do
 
   @impl true
   def get(conn, scope_id) do
-    case Authex.get_scope(scope_id) do
-      nil -> View.not_found(conn)
-      scope -> View.success(conn, scope)
+    with %{} = scope <- Authex.get_scope(scope_id) do
+      View.success(conn, scope)
     end
   end
 end

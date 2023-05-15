@@ -5,9 +5,8 @@ defmodule AuthexWeb.Actions.Client.List do
 
   @impl true
   def list(conn, pagination) do
-    case Pagination.cast_pagination(pagination) do
-      {:ok, pagination} -> View.success(conn, Authex.list_clients(pagination))
-      _ -> View.not_found(conn)
+    with {:ok, pagination} <- Pagination.cast_pagination(pagination) do
+      View.success(conn, Authex.list_clients(pagination))
     end
   end
 end

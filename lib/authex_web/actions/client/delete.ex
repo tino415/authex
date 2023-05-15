@@ -5,9 +5,8 @@ defmodule AuthexWeb.Actions.Client.Delete do
 
   @impl true
   def delete(conn, client_id) do
-    case Authex.get_client(client_id) do
-      nil -> View.not_found(conn)
-      client -> View.success(conn, Authex.delete_client!(client))
+    with %{} = client <- Authex.get_client(client_id) do
+      View.success(conn, Authex.delete_client!(client))
     end
   end
 end

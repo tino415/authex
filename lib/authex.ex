@@ -19,8 +19,8 @@ defmodule Authex do
     |> Repo.insert()
   end
 
-  def delete_user(user) do
-    Repo.delete(user)
+  def delete_user!(user) do
+    Repo.delete!(user)
   end
 
   def update_user(user, params) do

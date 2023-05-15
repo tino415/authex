@@ -20,16 +20,13 @@ defmodule AuthexWeb.Actions.Token.Create do
     end
   end
 
-  # TODO: resolve refresh tokens
-
   def create(conn, body_params) do
     do_create(conn, nil, body_params)
   end
 
   defp do_create(conn, flow, body_params) do
-    case Authex.create_token(conn.assigns.current_client, flow, body_params) do
-      {:ok, token} -> View.created(conn, token)
-      {:error, changeset} -> View.invalid_request(conn, changeset)
+    with {:ok, token} <- Authex.create_token(conn.assigns.current_client, flow, body_params) do
+      View.created(conn, token)
     end
   end
 end

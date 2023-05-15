@@ -5,15 +5,9 @@ defmodule AuthexWeb.Actions.Scope.Update do
 
   @impl true
   def update(conn, scope_id, body_params) do
-    case Authex.get_scope(scope_id) do
-      nil ->
-        View.not_found(conn)
-
-      scope ->
-        case Authex.update_scope(scope, body_params) do
-          {:ok, scope} -> View.success(conn, scope)
-          {:error, changeset} -> View.invalid_request(conn, changeset)
-        end
+    with %{} = scope <- Authex.get_scope(scope_id),
+         {:ok, scope} <- Authex.update_scope(scope, body_params) do
+      View.success(conn, scope)
     end
   end
 end

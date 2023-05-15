@@ -18,8 +18,12 @@ defmodule AuthexWeb.View do
     json_not_found(conn, %{"error" => "not found"})
   end
 
-  def invalid_request(conn, changeset) do
+  def invalid_request_changeset(conn, changeset) do
     json_unprocessable_entity_changeset(conn, changeset)
+  end
+
+  def invalid_request(conn, error) do
+    json_unprocessable_entity(conn, error)
   end
 
   def internal_server_error(conn) do

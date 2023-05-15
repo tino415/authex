@@ -5,9 +5,8 @@ defmodule AuthexWeb.Actions.User.Get do
 
   @impl true
   def get(conn, user_id) do
-    case Authex.get_user(user_id) do
-      nil -> View.not_found(conn)
-      user -> View.success(conn, user)
+    with %{} = user <- Authex.get_user(user_id) do
+      View.success(conn, user)
     end
   end
 end

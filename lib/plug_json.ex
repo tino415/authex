@@ -23,8 +23,12 @@ defmodule PlugJason do
     json_resp(conn, 500, body)
   end
 
+  def json_unprocessable_entity(conn, body) do
+    json_resp(conn, 422, body)
+  end
+
   def json_unprocessable_entity_changeset(conn, changeset) do
-    json_resp(conn, 422, changeset_to_map(changeset))
+    json_unprocessable_entity(conn, changeset_to_map(changeset))
   end
 
   defp changeset_to_map(changeset) do

@@ -5,15 +5,9 @@ defmodule AuthexWeb.Actions.User.Update do
 
   @impl true
   def update(conn, user_id, body_params) do
-    case Authex.get_user(user_id) do
-      nil ->
-        View.not_found(conn)
-
-      user ->
-        case Authex.update_user(user, body_params) do
-          {:ok, user} -> View.success(conn, user)
-          {:error, changeset} -> View.invalid_request(conn, changeset)
-        end
+    with %{} = user <- Authex.get_user(user_id),
+         {:ok, user} <- Authex.update_user(user, body_params) do
+      View.success(conn, user)
     end
   end
 end

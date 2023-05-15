@@ -12,9 +12,6 @@ defmodule AuthexWeb.Actions.Flow.Submit do
       url = %{flow.redirect_uri | query: URI.encode_query(query_params)}
 
       View.redirect(conn, to_string(url))
-    else
-      nil -> View.not_found(conn)
-      {:error, changeset} -> View.invalid_request(conn, changeset)
     end
   end
 end
