@@ -3,12 +3,17 @@ defmodule Authex.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      AuthexWeb.Endpoint,
-      Authex.Repo
-    ]
-
     opts = [strategy: :one_for_one, name: Authex.Supervisor]
-    Supervisor.start_link(children, opts)
+    Supervisor.start_link(children(), opts)
+  end
+
+  if Mix.env() != :test do
+    def children do
+      [AuthexWeb.Endpoint, Authex.Repo]
+    end
+  else
+    def children do
+      [Authex.Repo]
+    end
   end
 end
